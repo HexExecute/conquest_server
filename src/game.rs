@@ -18,6 +18,9 @@ pub struct Game {
     schedule: Schedule
 }
 
+unsafe impl Send for Game {}
+unsafe impl Sync for Game {}
+
 impl Game {
     pub fn new(config: GameConfig) -> Self {
         let mut game = Self {

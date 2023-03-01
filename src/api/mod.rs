@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use axum::{Router, Extension, routing::get};
 use crate::game::Game;
 
@@ -13,7 +15,7 @@ pub struct APIHandler {
 }
 
 impl APIHandler {
-    pub fn new(game: &Game) -> Self {
+    pub fn new(game: Arc<Game>) -> Self {
         Self {
             app: Router::new()
                 .route("/ws", get(|ws| SocketHandler::ws_handler(ws, game)))
