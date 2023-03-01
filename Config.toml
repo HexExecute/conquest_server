@@ -1,0 +1,10 @@
+[database] # currently using mongodb
+username = "conquest_server"
+password = ""
+uri = ""
+
+[discord]
+token = ""
+
+[game]
+tps = 20
