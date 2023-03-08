@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{sync::{ Arc, Mutex }, net::SocketAddr};
 
 use config::Config;
 use game::Game;
@@ -12,9 +12,14 @@ mod bot;
 #[tokio::main]
 async fn main() {
     let config = Config::new();
-    let mut game = Game::new(config.game.clone());
-    let mut api_handler = APIHandler::new(Arc::new(game));
-    println!("Game initialized");
+    let mut game = Arc::new(Mutex::new(Game::new(config.game.clone())));
+    println!("game initialized");
 
-    game.update();
+    game.lock().unwrap().update();
+
+    let mut api_handler = APIHandler::new(
+        Arc::clone(&game),
+        SocketAddr::from(([127,0,0,1], 3000))
+    ).await;
+    println!("api initialized");
 }

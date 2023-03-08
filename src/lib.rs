@@ -2,8 +2,8 @@ use std::ops::{Add, Sub, Mul, Div, AddAssign, SubAssign, MulAssign, DivAssign};
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Vec2D {
-    x: f32,
-    y: f32
+    pub x: f32,
+    pub y: f32
 }
 
 
@@ -163,5 +163,9 @@ impl Vec2D {
     pub fn normalize(&self) -> Vec2D {
         let mag = self.mag();
         Vec2D::new(self.x / mag, self.y / mag)
+    }
+
+    pub fn length(&self) -> f32 {
+        f32::sqrt(self.x * self.x + self.y * self.y)
     }
 }

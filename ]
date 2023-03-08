@@ -1,5 +1,6 @@
 use std::time::{Instant, Duration};
 
+use conquest_server::Vec2D;
 use legion::*;
 
 use crate::config::GameConfig;
@@ -34,6 +35,20 @@ impl Game {
                 .build()
         };
 
+        game.world.push((Body {
+            position: Vec2D::new(50.0, 0.0),
+            velocity: Vec2D::new(-1.0, 0.0),
+            weight: 1.0,
+            color: (0.0,0.0,0.0),
+            size: 1.0
+        }, Body {
+            position: Vec2D::new(0.0, 0.0),
+            velocity: Vec2D::new(0.0, 0.0),
+            weight: 1.0,
+            color: (0.0,0.0,0.0),
+            size: 1.0
+        }));
+
         game.resources.insert(GameTime { delta: (1 / game.config.tps) as f32 });
 
         game
@@ -62,16 +77,27 @@ impl Game {
     fn tick(&mut self) {
         self.schedule.execute(&mut self.world, &mut self.resources);
 
-        let mut body_query = <&mut Body>::query();
+        let mut body_query = <&Body>::query();
 
-        let copy = body_query.iter_mut(&mut self.world).map(|x| x.clone()).collect::<Vec<_>>();
+        let copy = body_query.iter(&self.world).cloned().collect::<Vec<_>>();
 
-        for (i, body1) in body_query.iter_mut(&mut self.world).enumerate() {
+        for (i, mut body1) in body_query.iter_mut(&mut self.world).enumerate() {
             for (j, body2) in copy.iter().enumerate() {
                 if i != j { 
-                    self::update::update_collisions(body1, &body2)
+                    self::update::update_collisions(mut body1, &body2)
                 }
             }
         }
+
+
+        /*
+        for mut body1 in body_query.iter_mut(&mut self.world) {
+            for mut body2 in body_query.iter_mut(&mut self.world) {
+                if body1 != body2 { 
+                    self::update::update_collisions(&mut body1, &mut body2)
+                }
+            }
+        }
+        */
     }
 }

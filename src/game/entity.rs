@@ -88,11 +88,13 @@ impl MulAssign<f32> for Health {
 }
 
 
-#[derive(Debug)]
+
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Body {
     pub position: Vec2D,
     pub velocity: Vec2D,
     pub size: f32,
     pub weight: f32,
-    pub color: (f32,f32,f32)
+    pub color: (f32, f32, f32),
 }
+
